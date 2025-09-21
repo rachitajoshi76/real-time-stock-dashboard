@@ -1,0 +1,75 @@
+/* src/styles/stockTable.css */
+.stock-table-card {
+  background: var(--card);
+  padding: 0; /* let table handle spacing */
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(9, 30, 66, 0.08);
+  display: flex;
+  flex-direction: column;
+}
+
+/* Table core */
+.stock-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.stock-table th,
+.stock-table td {
+  padding: 12px 14px;
+  text-align: center;
+  border-bottom: 1px solid #f0f2f6;
+}
+
+/* Sticky header */
+.stock-table thead th {
+  background: #f9fbfd;
+  font-weight: 600;
+  color: #334155;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* Row styles */
+.stock-table tbody tr:nth-child(even) {
+  background: #fafafa;
+}
+
+.stock-table tbody tr:hover {
+  background: #f6f9ff;
+  cursor: pointer;
+}
+
+.stock-table tr.selected {
+  background: #e8f1ff;
+}
+
+/* Positive/Negative text */
+.stock-table td.positive {
+  color: var(--success);
+  font-weight: 600;
+}
+
+.stock-table td.negative {
+  color: var(--danger);
+  font-weight: 600;
+}
+
+/* Footer inside card */
+.stock-table-footer {
+  background: linear-gradient(90deg, #0f172a, #1e293b);
+  color: #cbd5e1;
+  text-align: center;
+  padding: 0.6rem;
+  font-size: 0.8rem;
+  font-weight: 500;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.stock-table-footer span {
+  color: #38bdf8; /* accent blue */
+  font-weight: 600;
+}

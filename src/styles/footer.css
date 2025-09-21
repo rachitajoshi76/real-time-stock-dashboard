@@ -1,0 +1,14 @@
+/* src/styles/footer.css */
+
+.footer {
+  width: 100%;
+  padding: 16px 24px;
+  background-color: #1e1e2f; /* dark footer */
+  color: #fff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 14px;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 0 -2px 6px rgba(0, 0, 0, 0.2);
+}

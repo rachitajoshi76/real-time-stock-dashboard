@@ -1,0 +1,42 @@
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #1e90ff; /* bright blue */
+  color: #fff;
+  padding: 24px 32px; /* Increased vertical padding to make it taller */
+  box-shadow: 0 3px 12px rgba(0, 0, 0, 0.15);
+  border-radius: 6px;
+}
+
+.logo {
+  font-weight: 700;
+  font-size: 1.4rem;
+  cursor: pointer;
+  color: #fff;
+  text-decoration: none;
+}
+
+.nav-right {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Shared button styles (Logout + Toggle) */
+.nav-right button {
+  cursor: pointer;
+  background: #fff;
+  color: #1e90ff;
+  border: none;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-weight: 600;
+  transition: background 0.2s ease, color 0.2s ease, transform 0.1s ease;
+}
+
+.nav-right button:hover {
+  background: #ffd700; /* golden hover */
+  color: #0f1724;
+  transform: scale(1.05);
+}

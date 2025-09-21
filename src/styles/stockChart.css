@@ -1,0 +1,14 @@
+/* src/styles/stockChart.css */
+.chart-card {
+  background: var(--card); /* Use the --card variable for background */
+  padding: 12px;
+  border-radius: 10px;
+  height: 420px;
+  box-shadow: 0 8px 24px rgba(9, 30, 66, 0.06);
+  transition: background 0.3s ease; /* Add transition for a smooth mode change */
+}
+
+/* Optional: Add a dark mode specific shadow for better contrast */
+[data-theme="dark"] .chart-card {
+  box-shadow: 0 8px 24px rgba(255, 255, 255, 0.08);
+}
