@@ -68,19 +68,20 @@ export default function Dashboard() {
     ...data,
   }));
 
-  const currentStock = bySymbol[selectedTicker] || Object.values(bySymbol)[0] || null;
+  const currentStock =
+    bySymbol[selectedTicker] || Object.values(bySymbol)[0] || null;
 
   return (
     <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
       <Navbar />
 
+      {/* ✅ Updated header */}
       <header
         style={{
-          backgroundColor: "#2563eb",
-          color: "white",
-          textAlign: "center",
-          padding: "24px 0",
-          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+          textAlign: "center", // horizontal center
+          padding: "20px 0",
+          borderBottom: "1px solid #e5e7eb", // subtle underline
+          background: "#fff",
         }}
       >
         <h1 style={{ fontSize: "28px", fontWeight: "bold", margin: 0 }}>
@@ -113,7 +114,9 @@ export default function Dashboard() {
             overflowX: "auto",
           }}
         >
-          <h2 style={{ fontSize: "18px", fontWeight: "600", marginBottom: "16px" }}>
+          <h2
+            style={{ fontSize: "18px", fontWeight: "600", marginBottom: "16px" }}
+          >
             Company Stock Data
           </h2>
           <StockTable
@@ -132,7 +135,9 @@ export default function Dashboard() {
             boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
           }}
         >
-          <h2 style={{ fontSize: "18px", fontWeight: "600", marginBottom: "16px" }}>
+          <h2
+            style={{ fontSize: "18px", fontWeight: "600", marginBottom: "16px" }}
+          >
             Stock Price Trend ({selectedTicker || "—"})
           </h2>
           <StockChart
