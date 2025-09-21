@@ -1,40 +1,104 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/pages/api-reference/create-next-app).
+# 📈 Real-Time Stock Dashboard
 
-## Getting Started
+A professional **Next.js + Redux** powered dashboard that displays **real-time stock prices** using a **Node.js Server-Sent Events (SSE) backend**.  
+The app allows users to sign up, log in, view live stock updates, monitor KPIs, and analyze price trends through interactive charts.
 
-First, run the development server:
+---
 
-```bash
+## 🚀 Features
+- **Authentication** (Signup, Login, Logout) with localStorage persistence  
+- **Real-time stock updates** via SSE from a custom backend  
+- **KPI Cards** for quick insights (Latest Price, % Change, Moving Average, Timestamp)  
+- **Stock Table** with all tracked companies  
+- **Interactive Charts** (Recharts) for stock price history  
+- **Clean UI** with responsive layout and professional styling  
+
+---
+
+## 🛠️ Tech Stack
+### Frontend
+- [Next.js](https://nextjs.org/) (React framework)
+- [Redux Toolkit](https://redux-toolkit.js.org/) for state management
+- [Recharts](https://recharts.org/en-US/) for data visualization
+- TailwindCSS + custom CSS for styling
+
+### Backend
+- Node.js + Express
+- Server-Sent Events (SSE) for live data streaming
+
+---
+
+## 📂 Project Structure
+📦 stock-dashboard
+├── backend/ # Node.js SSE server
+│ └── server.js
+├── frontend/ # Next.js frontend
+│ ├── components/ # Reusable components (Navbar, Footer, KPIBoxes, etc.)
+│ ├── pages/ # Next.js pages (login, signup, dashboard)
+│ ├── redux/ # Redux slice (stockSlice.js, authSlice.js)
+│ └── styles/ # Global styles
+├── package.json
+└── README.md
+
+⚙️ Setup and Run Instructions
+1️⃣ Clone the Repository
+git clone https://github.com/your-username/stock-dashboard.git
+cd stock-dashboard
+
+2️⃣ Start the Backend (SSE Server)
+
+Navigate to the backend folder:
+
+cd backend
+
+
+Install dependencies:
+
+npm install
+
+
+Start the server:
+
+node server.js
+
+
+The backend will run at:
+
+http://localhost:8080
+
+3️⃣ Start the Frontend (Next.js App)
+
+Open a new terminal and navigate to the frontend folder:
+
+cd frontend
+
+
+Install dependencies:
+
+npm install
+
+
+Run the development server:
+
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+Open your browser and visit:
 
-[API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+http://localhost:3000
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/pages/building-your-application/routing/api-routes) instead of React pages.
+4️⃣ Login & Dashboard Usage
 
-This project uses [`next/font`](https://nextjs.org/docs/pages/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+Go to /signup and create a new account.
 
-## Learn More
+Login with the same credentials at /login.
 
-To learn more about Next.js, take a look at the following resources:
+Access the Dashboard at /dashboard.
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn-pages-router) - an interactive Next.js tutorial.
+Stocks will update in real-time via SSE.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+5️⃣ Stopping the App
 
-## Deploy on Vercel
+To stop the backend: Press CTRL + C in the terminal running node server.js.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/pages/building-your-application/deploying) for more details.
+To stop the frontend: Press CTRL + C in the terminal running npm run dev.
