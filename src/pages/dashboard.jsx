@@ -1,112 +1,144 @@
-import { useEffect } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { useRouter } from "next/router";
+import React, { useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
+import { setSelectedTicker, processUpdate } from "../redux/stockSlice";
 import Navbar from "../components/Navbar";
 import Footer from "../components/Footer";
 import StockTable from "../components/StockTable";
 import StockChart from "../components/StockChart";
-import { processUpdate, setSelectedTicker } from "../redux/stockSlice";
+import KPIBoxes from "../components/KPIBoxes";
 
 export default function Dashboard() {
   const dispatch = useDispatch();
-  const router = useRouter();
-  const bySymbol = useSelector((state) => state.stock.bySymbol);
-  const selectedTicker = useSelector((state) => state.stock.selectedTicker);
+  const { bySymbol, selectedTicker } = useSelector((state) => state.stock);
 
+  // Seed initial dummy data
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      router.push("/login");
-      return;
+    if (!bySymbol || Object.keys(bySymbol).length === 0) {
+      dispatch(
+        processUpdate([
+          {
+            symbol: "AAPL",
+            latestPrice: 150,
+            changePercent: 0.5,
+            movingAvg: 148,
+            timestamp: new Date().toISOString(),
+          },
+          {
+            symbol: "TSLA",
+            latestPrice: 720,
+            changePercent: -1.2,
+            movingAvg: 710,
+            timestamp: new Date().toISOString(),
+          },
+          {
+            symbol: "GOOG",
+            latestPrice: 2800,
+            changePercent: 1.1,
+            movingAvg: 2780,
+            timestamp: new Date().toISOString(),
+          },
+        ])
+      );
     }
+  }, [dispatch, bySymbol]);
 
+  // SSE connection
+  useEffect(() => {
     const eventSource = new EventSource("http://localhost:8080/stocks/stream");
 
-    eventSource.onmessage = (e) => {
+    eventSource.onmessage = (event) => {
       try {
-        const data = JSON.parse(e.data);
-        dispatch(processUpdate(data));
+        const updates = JSON.parse(event.data);
+        dispatch(processUpdate(updates));
       } catch (err) {
-        console.error("SSE parse error", err);
+        console.error("Failed to parse SSE data", err);
       }
     };
 
-    eventSource.onerror = (err) => console.error("SSE error", err);
+    eventSource.onerror = (err) => {
+      console.error("SSE error:", err);
+      eventSource.close();
+    };
 
     return () => eventSource.close();
-  }, [dispatch, router]);
+  }, [dispatch]);
 
-  const handleLogout = () => {
-    localStorage.removeItem("token");
-    router.push("/login");
-  };
+  const stocksArray = Object.entries(bySymbol || {}).map(([symbol, data]) => ({
+    symbol,
+    ...data,
+  }));
 
-  const stocksArray = Object.keys(bySymbol).map((sym) => ({ symbol: sym, ...bySymbol[sym] }));
-
-  if (!stocksArray.length)
-    return (
-      <div className="p-8 text-center">
-        <h1 className="text-2xl font-bold text-blue-600">Live Stock Dashboard</h1>
-        <p className="text-gray-500 mt-2">Loading…</p>
-      </div>
-    );
-
-  const currentStock = selectedTicker ? bySymbol[selectedTicker] : null;
+  const currentStock = bySymbol[selectedTicker] || Object.values(bySymbol)[0] || null;
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col font-sans">
-      <Navbar logout={handleLogout} />
+    <div style={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}>
+      <Navbar />
 
-      {/* Header */}
-      <header className="bg-blue-600 text-white text-center py-6 shadow-md">
-        <h1 className="text-3xl font-bold">Live Stock Dashboard</h1>
+      <header
+        style={{
+          backgroundColor: "#2563eb",
+          color: "white",
+          textAlign: "center",
+          padding: "24px 0",
+          boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+        }}
+      >
+        <h1 style={{ fontSize: "28px", fontWeight: "bold", margin: 0 }}>
+          Live Stock Dashboard
+        </h1>
       </header>
 
-      <main className="flex-1 p-6 space-y-8">
-        {/* Stat Cards */}
-        {currentStock && (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
-            <div className="bg-white p-6 rounded-xl shadow text-center">
-              <p className="text-sm text-gray-500">Latest Price</p>
-              <p className="text-2xl font-bold text-green-600">
-                {currentStock.latestPrice?.toFixed(2) || "--"}
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-xl shadow text-center">
-              <p className="text-sm text-gray-500">Change</p>
-              <p className={`text-2xl font-bold ${currentStock.changePercent >= 0 ? "text-green-600" : "text-red-500"}`}>
-                {currentStock.changePercent?.toFixed(2) || "--"}%
-              </p>
-            </div>
-            <div className="bg-white p-6 rounded-xl shadow text-center">
-              <p className="text-sm text-gray-500">Moving Avg</p>
-              <p className="text-2xl font-bold text-blue-600">
-                {currentStock.movingAvg?.toFixed(2) || "--"}
-              </p>
-            </div>
-          </div>
-        )}
+      {/* KPI Boxes */}
+      <KPIBoxes stock={currentStock} />
 
-        {/* Table + Chart Panels */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="bg-white p-6 rounded-2xl shadow">
-            <h2 className="text-lg font-semibold mb-4">Company Stock Data</h2>
-            <StockTable
-              stocks={stocksArray}
-              selectedTicker={selectedTicker}
-              onSelect={(s) => dispatch(setSelectedTicker(s))}
-            />
-          </div>
+      <main
+        style={{
+          flex: 1,
+          padding: "24px",
+          display: "flex",
+          flexDirection: "column",
+          gap: "32px",
+          maxWidth: "1200px",
+          margin: "0 auto",
+          width: "100%",
+        }}
+      >
+        {/* Stock Table */}
+        <div
+          style={{
+            backgroundColor: "white",
+            padding: "24px",
+            borderRadius: "16px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+            overflowX: "auto",
+          }}
+        >
+          <h2 style={{ fontSize: "18px", fontWeight: "600", marginBottom: "16px" }}>
+            Company Stock Data
+          </h2>
+          <StockTable
+            stocksData={stocksArray}
+            selectedTicker={selectedTicker}
+            onSelect={(s) => dispatch(setSelectedTicker(s))}
+          />
+        </div>
 
-          <div className="bg-white p-6 rounded-2xl shadow">
-            <h2 className="text-lg font-semibold mb-4">
-              Stock Price Trend ({selectedTicker || "—"})
-            </h2>
-            <StockChart
-              ticker={selectedTicker}
-              entry={bySymbol[selectedTicker] || { history: [] }}
-            />
-          </div>
+        {/* Stock Chart */}
+        <div
+          style={{
+            backgroundColor: "white",
+            padding: "24px",
+            borderRadius: "16px",
+            boxShadow: "0 4px 12px rgba(0,0,0,0.05)",
+          }}
+        >
+          <h2 style={{ fontSize: "18px", fontWeight: "600", marginBottom: "16px" }}>
+            Stock Price Trend ({selectedTicker || "—"})
+          </h2>
+          <StockChart
+            ticker={selectedTicker}
+            entry={bySymbol[selectedTicker] || { history: [] }}
+          />
         </div>
       </main>
 

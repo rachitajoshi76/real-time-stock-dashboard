@@ -14,19 +14,17 @@ const stockSlice = createSlice({
   reducers: {
     processUpdate(state, action) {
       const updates = action.payload;
-
       updates.forEach(({ symbol, latestPrice, changePercent, movingAvg, timestamp }) => {
-        const price = Number(latestPrice); // ✅ backend sends latestPrice
+        const price = Number(latestPrice);
         timestamp = timestamp || new Date().toISOString();
 
         if (!state.bySymbol[symbol]) {
-          // Initialize if first time
           state.bySymbol[symbol] = {
             history: [],
             latestPrice: price,
             changePercent,
             movingAvg,
-            timestamp,   // ✅ keep same name that UI expects
+            timestamp,
           };
         }
 
@@ -34,13 +32,10 @@ const stockSlice = createSlice({
         entry.latestPrice = price;
         entry.changePercent = changePercent;
         entry.movingAvg = movingAvg;
-        entry.timestamp = timestamp; // ✅ align with StockTable
+        entry.timestamp = timestamp;
 
-        // Maintain history for chart
         entry.history.push({ price, timestamp });
-        if (entry.history.length > HISTORY_LIMIT) {
-          entry.history.shift();
-        }
+        if (entry.history.length > HISTORY_LIMIT) entry.history.shift();
       });
     },
     setSelectedTicker(state, action) {

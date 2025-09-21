@@ -1,50 +1,62 @@
-export default function StockTable({ stocks, selectedTicker, onSelect }) {
+// src/components/StockTable.jsx
+import React from "react";
+
+export default function StockTable({ stocksData = [], selectedTicker, onSelect }) {
   return (
-    <table className="w-full border-collapse text-sm">
-      <thead>
-        <tr className="bg-gray-100 text-left">
-          <th className="p-2">Symbol</th>
-          <th className="p-2">Price</th>
-          <th className="p-2">% Change</th>
-          <th className="p-2">Moving Avg</th>
-          <th className="p-2">Last</th>
-        </tr>
-      </thead>
-      <tbody>
-        {stocks.map((s) => (
-          <tr
-            key={s.symbol}
-            onClick={() => onSelect(s.symbol)}
-            className={`cursor-pointer hover:bg-blue-50 ${
-              selectedTicker === s.symbol ? "bg-blue-100 font-semibold" : ""
-            }`}
-          >
-            <td className="p-2">{s.symbol}</td>
-            <td className="p-2 text-green-600">
-              {s.latestPrice != null ? s.latestPrice.toFixed(2) : "--"}
-            </td>
-            <td
-              className={`p-2 ${
-                s.changePercent != null
-                  ? s.changePercent >= 0
-                    ? "text-green-600"
-                    : "text-red-500"
-                  : ""
-              }`}
-            >
-              {s.changePercent != null ? s.changePercent.toFixed(2) + "%" : "--"}
-            </td>
-            <td className="p-2 text-blue-600">
-              {s.movingAvg != null ? s.movingAvg.toFixed(2) : "--"}
-            </td>
-            <td className="p-2 text-gray-500">
-              {s.timestamp
-                ? new Date(s.timestamp).toLocaleTimeString()
-                : "--"}
+    <div className="stock-table-card">
+      <table className="stock-table">
+        <thead>
+          <tr>
+            <th>Symbol</th>
+            <th>Price</th>
+            <th>% Change</th>
+            <th>Moving Avg</th>
+            <th>Last</th>
+          </tr>
+        </thead>
+        <tbody>
+          {stocksData.length === 0 ? (
+            <tr>
+              <td colSpan={5} className="text-center text-gray-400">
+                No stock data available
+              </td>
+            </tr>
+          ) : (
+            stocksData.map((s) => (
+              <tr
+                key={s.symbol}
+                onClick={() => onSelect(s.symbol)}
+                className={selectedTicker === s.symbol ? "selected" : ""}
+              >
+                <td>{s.symbol}</td>
+                <td className={s.latestPrice >= 0 ? "positive" : "negative"}>
+                  {s.latestPrice != null ? s.latestPrice.toFixed(2) : "--"}
+                </td>
+                <td className={s.changePercent >= 0 ? "positive" : "negative"}>
+                  {s.changePercent != null ? s.changePercent.toFixed(2) + "%" : "--"}
+                </td>
+                <td>{s.movingAvg != null ? s.movingAvg.toFixed(2) : "--"}</td>
+                <td>
+                  {s.timestamp
+                    ? new Date(s.timestamp).toLocaleTimeString([], {
+                        hour: "2-digit",
+                        minute: "2-digit",
+                        second: "2-digit",
+                      })
+                    : "--"}
+                </td>
+              </tr>
+            ))
+          )}
+        </tbody>
+        <tfoot className="stock-table-footer">
+          <tr>
+            <td colSpan={5}>
+              <span>Real-time stock dashboard</span>
             </td>
           </tr>
-        ))}
-      </tbody>
-    </table>
+        </tfoot>
+      </table>
+    </div>
   );
 }

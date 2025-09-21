@@ -7,14 +7,16 @@ import Footer from "../components/Footer";
 import StockTable from "../components/StockTable";
 import StockChart from "../components/StockChart";
 import TickerSelector from "../components/TickerSelector";
+import KPIBoxes from "../components/KPIBoxes";
 
 export default function Home() {
   const dispatch = useDispatch();
-  const { bySymbol, selectedTicker } = useSelector((state) => state.stock);
+  const { bySymbol = {}, selectedTicker } = useSelector((state) => state.stock);
 
   useEffect(() => {
     if (typeof window === "undefined") return;
-const eventSource = new EventSource("http://localhost:8080/stocks/stream");
+
+    const eventSource = new EventSource("http://localhost:8080/stocks/stream");
 
     eventSource.onmessage = (event) => {
       try {
@@ -33,13 +35,12 @@ const eventSource = new EventSource("http://localhost:8080/stocks/stream");
     return () => eventSource.close();
   }, [dispatch]);
 
-  const stocks = useMemo(
-    () => Object.keys(bySymbol).map((s) => ({ symbol: s, ...bySymbol[s] })),
-    [bySymbol]
-  );
+  // Safely convert bySymbol to array
+  const stocks = useMemo(() => Object.keys(bySymbol || {}).map((s) => ({ symbol: s, ...bySymbol[s] })), [bySymbol]);
 
-  // ✅ Loading fallback
-  if (!stocks.length) {
+  const currentStock = bySymbol[selectedTicker] || Object.values(bySymbol)[0] || null;
+
+  if (!stocks || stocks.length === 0) {
     return (
       <div style={{ padding: "2rem", textAlign: "center" }}>
         <h1>📊 Stock Dashboard</h1>
@@ -52,8 +53,11 @@ const eventSource = new EventSource("http://localhost:8080/stocks/stream");
     <div>
       <Navbar />
 
-      <main className="dashboard-main" style={{ padding: "2rem" }}>
+      <main className="dashboard-main" style={{ padding: "2rem", maxWidth: "1200px", margin: "0 auto" }}>
         <h1 className="page-title">📊 Stock Dashboard</h1>
+
+        {/* KPI Boxes */}
+        <KPIBoxes stock={currentStock} />
 
         <TickerSelector
           tickers={Object.keys(bySymbol)}
@@ -61,13 +65,10 @@ const eventSource = new EventSource("http://localhost:8080/stocks/stream");
           onChange={(t) => dispatch(setSelectedTicker(t))}
         />
 
-        <div
-          className="dashboard-grid"
-          style={{ display: "flex", gap: "2rem", marginTop: "1rem" }}
-        >
+        <div className="dashboard-grid" style={{ display: "flex", gap: "2rem", marginTop: "1rem" }}>
           <div className="left-col" style={{ flex: 1 }}>
             <StockTable
-              stocks={stocks}
+              stocksData={stocks}
               selectedTicker={selectedTicker}
               onSelect={(s) => dispatch(setSelectedTicker(s))}
             />
@@ -75,10 +76,7 @@ const eventSource = new EventSource("http://localhost:8080/stocks/stream");
 
           <div className="right-col" style={{ flex: 2 }}>
             {selectedTicker && bySymbol[selectedTicker] && (
-              <StockChart
-                ticker={selectedTicker}
-                entry={bySymbol[selectedTicker]}
-              />
+              <StockChart ticker={selectedTicker} entry={bySymbol[selectedTicker]} />
             )}
           </div>
         </div>
