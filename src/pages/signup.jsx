@@ -23,7 +23,6 @@ export default function Signup() {
       return;
     }
 
-    // Fetch existing users from localStorage
     let savedUsers = [];
     try {
       const users = localStorage.getItem("users");
@@ -33,14 +32,17 @@ export default function Signup() {
       savedUsers = [];
     }
 
-    // Check if username already exists
-    if (savedUsers.find(u => u.username === username)) {
+    // Normalize username before saving
+    const normalizedUsername = username.trim().toLowerCase();
+
+    // Check if already exists
+    if (savedUsers.find((u) => u.username.toLowerCase() === normalizedUsername)) {
       setError("Username already exists");
       return;
     }
 
-    // Save new user
-    savedUsers.push({ username, password });
+    // Save user
+    savedUsers.push({ username: normalizedUsername, password });
     localStorage.setItem("users", JSON.stringify(savedUsers));
 
     alert("Signup successful! Please login.");
@@ -48,14 +50,16 @@ export default function Signup() {
   };
 
   return (
-    <div style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      minHeight: "100vh",
-      background: "linear-gradient(135deg, #667eea, #764ba2)",
-      fontFamily: "Inter, sans-serif",
-    }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #667eea, #764ba2)",
+        fontFamily: "Inter, sans-serif",
+      }}
+    >
       <form
         onSubmit={handleSubmit}
         style={{
@@ -67,17 +71,21 @@ export default function Signup() {
           textAlign: "center",
         }}
       >
-        <h2 style={{ marginBottom: 24, color: "#764ba2", fontWeight: 700 }}>Create Account</h2>
+        <h2 style={{ marginBottom: 24, color: "#764ba2", fontWeight: 700 }}>
+          Create Account
+        </h2>
 
         {error && (
-          <div style={{
-            marginBottom: 20,
-            color: "#dc2626",
-            fontWeight: 500,
-            background: "#ffe5e5",
-            padding: "8px 12px",
-            borderRadius: 6
-          }}>
+          <div
+            style={{
+              marginBottom: 20,
+              color: "#dc2626",
+              fontWeight: 500,
+              background: "#ffe5e5",
+              padding: "8px 12px",
+              borderRadius: 6,
+            }}
+          >
             {error}
           </div>
         )}
@@ -141,8 +149,12 @@ export default function Signup() {
             cursor: "pointer",
             transition: "background 0.2s",
           }}
-          onMouseEnter={(e) => e.currentTarget.style.background = "#667eea"}
-          onMouseLeave={(e) => e.currentTarget.style.background = "#764ba2"}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.background = "#667eea")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.background = "#764ba2")
+          }
         >
           Sign Up
         </button>

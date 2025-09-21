@@ -26,12 +26,18 @@ export default function Login() {
       savedUsers = [];
     }
 
+    // Normalize input (trim + lowercase username)
+    const normalizedUsername = username.trim().toLowerCase();
+
     const user = savedUsers.find(
-      (u) => u.username === username && u.password === password
+      (u) =>
+        u.username.toLowerCase() === normalizedUsername &&
+        u.password === password
     );
 
     if (user) {
       localStorage.setItem("token", "demo-token");
+      localStorage.setItem("activeUser", normalizedUsername); // track who logged in
       router.push("/dashboard");
     } else {
       setError("Invalid username or password");
@@ -39,14 +45,16 @@ export default function Login() {
   };
 
   return (
-    <div style={{
-      display: "flex",
-      justifyContent: "center",
-      alignItems: "center",
-      minHeight: "100vh",
-      background: "linear-gradient(135deg, #667eea, #764ba2)",
-      fontFamily: "Inter, sans-serif",
-    }}>
+    <div
+      style={{
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
+        minHeight: "100vh",
+        background: "linear-gradient(135deg, #667eea, #764ba2)",
+        fontFamily: "Inter, sans-serif",
+      }}
+    >
       <form
         onSubmit={handleSubmit}
         style={{
@@ -59,17 +67,21 @@ export default function Login() {
           transition: "transform 0.2s",
         }}
       >
-        <h2 style={{ marginBottom: 24, color: "#764ba2", fontWeight: 700 }}>Welcome Back</h2>
+        <h2 style={{ marginBottom: 24, color: "#764ba2", fontWeight: 700 }}>
+          Welcome Back
+        </h2>
 
         {error && (
-          <div style={{
-            marginBottom: 20,
-            color: "#dc2626",
-            fontWeight: 500,
-            background: "#ffe5e5",
-            padding: "8px 12px",
-            borderRadius: 6
-          }}>
+          <div
+            style={{
+              marginBottom: 20,
+              color: "#dc2626",
+              fontWeight: 500,
+              background: "#ffe5e5",
+              padding: "8px 12px",
+              borderRadius: 6,
+            }}
+          >
             {error}
           </div>
         )}
@@ -86,9 +98,9 @@ export default function Login() {
             borderRadius: 8,
             border: "1px solid #dcdde1",
             fontSize: 14,
-            transition: "0.2s",
           }}
         />
+
         <input
           type="password"
           placeholder="Password"
@@ -101,7 +113,6 @@ export default function Login() {
             borderRadius: 8,
             border: "1px solid #dcdde1",
             fontSize: 14,
-            transition: "0.2s",
           }}
         />
 
@@ -119,8 +130,12 @@ export default function Login() {
             cursor: "pointer",
             transition: "background 0.2s",
           }}
-          onMouseEnter={(e) => e.currentTarget.style.background = "#667eea"}
-          onMouseLeave={(e) => e.currentTarget.style.background = "#764ba2"}
+          onMouseEnter={(e) =>
+            (e.currentTarget.style.background = "#667eea")
+          }
+          onMouseLeave={(e) =>
+            (e.currentTarget.style.background = "#764ba2")
+          }
         >
           Login
         </button>
@@ -129,7 +144,11 @@ export default function Login() {
           Don't have an account?{" "}
           <span
             onClick={() => router.push("/signup")}
-            style={{ color: "#667eea", cursor: "pointer", fontWeight: 500 }}
+            style={{
+              color: "#667eea",
+              cursor: "pointer",
+              fontWeight: 500,
+            }}
           >
             Sign Up
           </span>
