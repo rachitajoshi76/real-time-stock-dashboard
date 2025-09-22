@@ -1,104 +1,90 @@
-# 📈 Real-Time Stock Dashboard
+# Real-time Stock Ticker Dashboard (Next.js + SSE)
 
-A professional **Next.js + Redux** powered dashboard that displays **real-time stock prices** using a **Node.js Server-Sent Events (SSE) backend**.  
-The app allows users to sign up, log in, view live stock updates, monitor KPIs, and analyze price trends through interactive charts.
+A live streaming stock dashboard with KPI cards, a data table, and interactive charts.  
+Built with *Next.js* (frontend) + *Express (backend)* using *Server-Sent Events (SSE)*.
 
 ---
 
 ## 🚀 Features
-- **Authentication** (Signup, Login, Logout) with localStorage persistence  
-- **Real-time stock updates** via SSE from a custom backend  
-- **KPI Cards** for quick insights (Latest Price, % Change, Moving Average, Timestamp)  
-- **Stock Table** with all tracked companies  
-- **Interactive Charts** (Recharts) for stock price history  
-- **Clean UI** with responsive layout and professional styling  
+- 📈 *Real-time Stock Data* via SSE (auto updates every second).  
+- 🧾 *KPI Boxes* for quick insights.  
+- 📋 *Stock Table* with live values.  
+- 📊 *Interactive Charts* powered by chart libraries.  
+- ⚡ *Single Server* (Express + Next.js combined).  
 
 ---
 
-## 🛠️ Tech Stack
-### Frontend
-- [Next.js](https://nextjs.org/) (React framework)
-- [Redux Toolkit](https://redux-toolkit.js.org/) for state management
-- [Recharts](https://recharts.org/en-US/) for data visualization
-- TailwindCSS + custom CSS for styling
+## 📦 Requirements
+Make sure you have the following installed:
 
-### Backend
-- Node.js + Express
-- Server-Sent Events (SSE) for live data streaming
+- *Node.js*: v20.17.0  
+- *npm*: 10.8.2  
 
----
+Check your versions with:
+bash
+node --version
+npm --version
 
-## 📂 Project Structure
-📦 stock-dashboard
-├── backend/ # Node.js SSE server
-│ └── server.js
-├── frontend/ # Next.js frontend
-│ ├── components/ # Reusable components (Navbar, Footer, KPIBoxes, etc.)
-│ ├── pages/ # Next.js pages (login, signup, dashboard)
-│ ├── redux/ # Redux slice (stockSlice.js, authSlice.js)
-│ └── styles/ # Global styles
-├── package.json
-└── README.md
+📦 Installation & Setup
+1️⃣ Clone / Download the Project
+git clone https://github.com/rachitajoshi76/real-time-stock-dashboard.git
+cd real-time-stock-dashboard
 
-⚙️ Setup and Run Instructions
-1️⃣ Clone the Repository
-git clone https://github.com/your-username/stock-dashboard.git
-cd stock-dashboard
-
-2️⃣ Start the Backend (SSE Server)
-
-Navigate to the backend folder:
-
-cd backend
-
-
-Install dependencies:
-
+2️⃣ Install Dependencies
 npm install
 
 
-Start the server:
+This will install:
 
+express (backend server)
+
+next (frontend framework)
+
+react and react-dom
+
+redux-toolkit and chart libraries
+
+3️⃣ Build the Application
+npm run build
+
+4️⃣ Run the Application
 node server.js
 
 
-The backend will run at:
+Open your browser:
+👉 http://localhost:8080
 
-http://localhost:8080
+The page should show your Stock Dashboard updating every second.
 
-3️⃣ Start the Frontend (Next.js App)
+✅ You do not need npm run dev or next dev because server.js already handles Next.js.
 
-Open a new terminal and navigate to the frontend folder:
+⚙️ How it Works
+Backend (Express + SSE)
 
-cd frontend
+Express server runs at /stocks/stream.
 
+Generates random stock updates every second.
 
-Install dependencies:
+Broadcasts updates via Server-Sent Events (SSE).
 
-npm install
+Frontend (Next.js + Redux)
 
+Next.js pages connect to the SSE stream.
 
-Run the development server:
+Redux store manages live stock data.
 
-npm run dev
+Components render:
 
+📌 KPI Boxes
 
-Open your browser and visit:
+📌 Stock Table
 
-http://localhost:3000
+📌 Interactive Charts
 
-4️⃣ Login & Dashboard Usage
+👩‍💻 Author
 
-Go to /signup and create a new account.
+Rachita Joshi
+📅 Submission Date: 22-06-2025
+📩 Submitted to: Ansh Mishra
+🎯 For the Role: Frontend Engineer
 
-Login with the same credentials at /login.
-
-Access the Dashboard at /dashboard.
-
-Stocks will update in real-time via SSE.
-
-5️⃣ Stopping the App
-
-To stop the backend: Press CTRL + C in the terminal running node server.js.
-
-To stop the frontend: Press CTRL + C in the terminal running npm run dev.
